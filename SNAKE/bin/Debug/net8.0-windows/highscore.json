@@ -1,0 +1,11 @@
+{
+  "HighScore": 10,
+  "TotalApplesEaten": 102,
+  "TotalGamesPlayed": 3,
+  "VictoriesCount": 1,
+  "ModeHighScores": {
+    "Small_Viper_Solid_Classic": 0,
+    "Small_Viper_Portal_Classic": 10,
+    "TestMode": 60
+  }
+}

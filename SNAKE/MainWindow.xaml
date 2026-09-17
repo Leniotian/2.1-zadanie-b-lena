@@ -1,0 +1,393 @@
+<Window x:Class="SNAKE.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="clr-namespace:SNAKE.Views"
+        Title="SNAKE - Leśna Przygoda"
+        Height="780" Width="1020"
+        MinHeight="680" MinWidth="850"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource ForestDarkBgBrush}"
+        Foreground="{StaticResource TextPrimaryBrush}"
+        Focusable="True">
+
+    <Grid>
+        <!-- Background Ambient Fireflies Layer -->
+        <views:FireflyCanvas x:Name="FireflyLayer" />
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Top Header Bar -->
+            <Border Grid.Row="0"
+                    Background="{StaticResource ForestHeaderBgBrush}"
+                    BorderBrush="{StaticResource ForestCardBorderBrush}"
+                    BorderThickness="0,0,0,2"
+                    Padding="16,10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Left: Title & Mode Chips -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <!-- Forest Leaf Logo -->
+                        <Border Width="34" Height="34" CornerRadius="8" Background="{StaticResource ForestGreenDarkBrush}" Margin="0,0,10,0">
+                            <TextBlock Text="🌿" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="SNAKE" FontWeight="Black" FontSize="16" Foreground="{StaticResource ForestGreenLightBrush}"/>
+                            <TextBlock x:Name="TxtModeSummary" Text="Normalna 16x16 • Jeleń • Ściany" FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Center: Scores & Apples Progress -->
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <!-- Current Score -->
+                        <Border Background="#1A2D1A" BorderBrush="{StaticResource ForestCardBorderBrush}" BorderThickness="1" CornerRadius="8" Padding="12,5" Margin="6,0">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="🍎" FontSize="15" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                <StackPanel>
+                                    <TextBlock Text="WYNIK" FontSize="9" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                    <TextBlock x:Name="TxtCurrentScore" Text="0" FontSize="16" FontWeight="Black" Foreground="#FFFFFF"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Fruits Collected / Max -->
+                        <Border Background="#1A2D1A" BorderBrush="{StaticResource ForestCardBorderBrush}" BorderThickness="1" CornerRadius="8" Padding="12,5" Margin="6,0">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="🧺" FontSize="15" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                <StackPanel>
+                                    <TextBlock Text="OWOCE / MAX" FontSize="9" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                    <TextBlock x:Name="TxtFruitsProgress" Text="0 / 253" FontSize="15" FontWeight="Bold" Foreground="{StaticResource ForestGoldBrush}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- High Score -->
+                        <Border Background="#1A2D1A" BorderBrush="{StaticResource ForestCardBorderBrush}" BorderThickness="1" CornerRadius="8" Padding="12,5" Margin="6,0">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="🏆" FontSize="15" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                <StackPanel>
+                                    <TextBlock Text="REKORD" FontSize="9" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}"/>
+                                    <TextBlock x:Name="TxtHighScore" Text="0" FontSize="16" FontWeight="Black" Foreground="{StaticResource ForestGoldBrush}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Combo Badge -->
+                        <Border x:Name="BadgeCombo" Visibility="Collapsed" Background="#D84315" CornerRadius="8" Padding="8,4" Margin="6,0">
+                            <TextBlock x:Name="TxtCombo" Text="COMBO x2!" FontWeight="Black" FontSize="13" Foreground="#FFF9C4"/>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Right: Action Buttons -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button x:Name="BtnMute" Style="{StaticResource HeaderActionButtonStyle}" Click="BtnMute_Click" Margin="4,0" ToolTip="Wycisz dźwięk (M)">
+                            <TextBlock x:Name="TxtMuteIcon" Text="🔊 Dźwięk" FontSize="12"/>
+                        </Button>
+                        <Button x:Name="BtnPause" Style="{StaticResource HeaderActionButtonStyle}" Click="BtnPause_Click" Margin="4,0" ToolTip="Pauza (Spacja)">
+                            <TextBlock x:Name="TxtPauseIcon" Text="⏸ Pauza" FontSize="12"/>
+                        </Button>
+                        <Button x:Name="BtnRestart" Style="{StaticResource HeaderActionButtonStyle}" Click="BtnRestart_Click" Margin="4,0" ToolTip="Nowa gra (R)">
+                            <TextBlock Text="🔄 Restart" FontSize="12"/>
+                        </Button>
+                        <Button x:Name="BtnMenu" Style="{StaticResource HeaderActionButtonStyle}" Click="BtnMenu_Click" Margin="4,0" ToolTip="Menu główne (Esc)">
+                            <TextBlock Text="⚙ Menu" FontSize="12"/>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Main Area: Game Board & Overlays -->
+            <Grid Grid.Row="1">
+                <!-- Vector Checkered Game Board -->
+                <views:GameCanvas x:Name="BoardCanvas" Margin="12"/>
+
+                <!-- Ready Hint Floating Banner -->
+                <Border x:Name="BannerReadyHint"
+                        HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                        Margin="0,0,0,24"
+                        Background="#D9162916"
+                        BorderBrush="{StaticResource ForestGreenLightBrush}"
+                        BorderThickness="1"
+                        CornerRadius="16"
+                        Padding="18,8"
+                        IsHitTestVisible="False">
+                    <TextBlock Text="🎮 Użyj strzałek lub WASD, aby ruszyć wężem!"
+                               FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextGoldBrush}"/>
+                </Border>
+
+                <!-- Pause Overlay -->
+                <Border x:Name="OverlayPause"
+                        Visibility="Collapsed"
+                        Background="#B30C160C">
+                    <Border Style="{StaticResource ForestCardBorderStyle}"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Width="360" Padding="28">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="⏸" FontSize="44" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                            <TextBlock Text="GRA WSTRZYMANA" FontWeight="Black" FontSize="22" HorizontalAlignment="Center" Foreground="{StaticResource ForestGreenLightBrush}"/>
+                            <TextBlock Text="Odpocznij w cieniu leśnych drzew..." FontSize="13" HorizontalAlignment="Center" Foreground="{StaticResource TextMutedBrush}" Margin="0,6,0,24"/>
+
+                            <Button Style="{StaticResource ForestPrimaryButtonStyle}" Click="BtnResume_Click" Margin="0,0,0,10">
+                                <TextBlock Text="▶ Wznów Grę (Spacja)"/>
+                            </Button>
+                            <Button Style="{StaticResource ForestSecondaryButtonStyle}" Click="BtnMenu_Click">
+                                <TextBlock Text="⚙ Menu Główne"/>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                </Border>
+
+                <!-- Game Over Overlay -->
+                <Border x:Name="OverlayGameOver"
+                        Visibility="Collapsed"
+                        Background="#C8120B0B">
+                    <Border Style="{StaticResource ForestCardBorderStyle}"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Width="440" Padding="32" BorderBrush="#E57373">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="🍂" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                            <TextBlock Text="KONIEC PRZYGODY" FontWeight="Black" FontSize="24" HorizontalAlignment="Center" Foreground="#EF5350"/>
+                            <TextBlock x:Name="TxtGameOverReason" Text="Wąż zderzył się ze ścianą lasu!" FontSize="14" HorizontalAlignment="Center" Foreground="{StaticResource TextMutedBrush}" Margin="0,6,0,16"/>
+
+                            <!-- New Record Alert Banner -->
+                            <Border x:Name="BannerNewRecord" Visibility="Collapsed" Background="{StaticResource ForestGoldBrush}" CornerRadius="6" Padding="10,4" Margin="0,0,0,14">
+                                <TextBlock Text="⭐ NOWY REKORD LASU! ⭐" FontWeight="Black" FontSize="12" Foreground="#3E2723" HorizontalAlignment="Center"/>
+                            </Border>
+
+                            <!-- Score Card -->
+                            <Border Background="#1A2D1A" CornerRadius="10" Padding="18,12" Margin="0,0,0,20">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" HorizontalAlignment="Center">
+                                        <TextBlock Text="ZDOBYTE PUNKTY" FontSize="10" Foreground="{StaticResource TextMutedBrush}"/>
+                                        <TextBlock x:Name="TxtGameOverScore" Text="140" FontSize="26" FontWeight="Black" Foreground="#FFFFFF" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                                        <TextBlock Text="ZJEDZONE OWOCE" FontSize="10" Foreground="{StaticResource TextMutedBrush}"/>
+                                        <TextBlock x:Name="TxtGameOverApples" Text="14" FontSize="26" FontWeight="Black" Foreground="{StaticResource ForestGoldBrush}" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <Button Style="{StaticResource ForestPrimaryButtonStyle}" Click="BtnRestart_Click" Margin="0,0,0,10">
+                                <TextBlock Text="🔄 Zagraj Ponownie (R)"/>
+                            </Button>
+                            <Button Style="{StaticResource ForestSecondaryButtonStyle}" Click="BtnMenu_Click">
+                                <TextBlock Text="⚙ Menu Główne (Esc)"/>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                </Border>
+
+                <!-- Victory Overlay -->
+                <Border x:Name="OverlayVictory"
+                        Visibility="Collapsed"
+                        Background="#CC0A1E0A">
+                    <Border Style="{StaticResource ForestCardBorderStyle}"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Width="460" Padding="32" BorderBrush="{StaticResource ForestGoldBrush}">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="👑" FontSize="54" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                            <TextBlock Text="KRÓL LEŚNEJ PUSZCZY!" FontWeight="Black" FontSize="24" HorizontalAlignment="Center" Foreground="{StaticResource ForestGoldBrush}"/>
+                            <TextBlock Text="Niewiarygodne! Wypełniłeś całą planszę i zebrałeś wszystkie owoce lasu!"
+                                       FontSize="13" TextWrapping="Wrap" TextAlignment="Center" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,8,0,18"/>
+
+                            <!-- Score Card -->
+                            <Border Background="#1A2D1A" CornerRadius="10" Padding="18,12" Margin="0,0,0,20">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" HorizontalAlignment="Center">
+                                        <TextBlock Text="WYNIK KOŃCOWY" FontSize="10" Foreground="{StaticResource TextMutedBrush}"/>
+                                        <TextBlock x:Name="TxtVictoryScore" Text="2500" FontSize="28" FontWeight="Black" Foreground="#FFFFFF" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                                        <TextBlock Text="WSZYSTKIE OWOCE" FontSize="10" Foreground="{StaticResource TextMutedBrush}"/>
+                                        <TextBlock x:Name="TxtVictoryApples" Text="253" FontSize="28" FontWeight="Black" Foreground="{StaticResource ForestGoldBrush}" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <Button Style="{StaticResource ForestPrimaryButtonStyle}" Click="BtnRestart_Click" Margin="0,0,0,10">
+                                <TextBlock Text="🌿 Zagraj Ponownie"/>
+                            </Button>
+                            <Button Style="{StaticResource ForestSecondaryButtonStyle}" Click="BtnMenu_Click">
+                                <TextBlock Text="⚙ Menu Główne"/>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                </Border>
+
+                <!-- Full Main Menu Overlay -->
+                <Border x:Name="OverlayMenu"
+                        Visibility="Visible"
+                        Background="#F00D180D">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="920" Margin="24">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Title Header -->
+                            <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,20">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBlock Text="🌲" FontSize="36" Margin="0,0,10,0"/>
+                                    <TextBlock Text="SNAKE" FontWeight="Black" FontSize="40" Foreground="{StaticResource ForestGreenLightBrush}"/>
+                                    <TextBlock Text="🌲" FontSize="36" Margin="10,0,0,0"/>
+                                </StackPanel>
+                                <TextBlock Text="LEŚNA PRZYGODA • INSPIROWANA GOOGLE SNAKE"
+                                           FontSize="13" FontWeight="Bold" Foreground="{StaticResource TextGoldBrush}" HorizontalAlignment="Center"/>
+                            </StackPanel>
+
+                            <!-- Menu Body: 2 Columns -->
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="460"/>
+                                    <ColumnDefinition Width="420"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Column 1: Game Settings & Start -->
+                                <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                                    <!-- Start Game Button -->
+                                    <Button Style="{StaticResource ForestPrimaryButtonStyle}" Click="BtnStartGame_Click" Margin="0,0,0,16" Height="50">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="▶  ROZPOCZNIJ GRĘ" FontSize="16" FontWeight="Black"/>
+                                        </StackPanel>
+                                    </Button>
+
+                                    <!-- Option: Tile & Grid Size -->
+                                    <Border Style="{StaticResource ForestCardBorderStyle}" Margin="0,0,0,12">
+                                        <StackPanel>
+                                            <TextBlock Text="📐 Rozmiar Planszy / Wielkość Płytek:" FontWeight="Bold" FontSize="13" Margin="0,0,0,8" Foreground="{StaticResource TextGoldBrush}"/>
+                                            <WrapPanel>
+                                                <RadioButton x:Name="RadSizeSmall" Style="{StaticResource ForestPillRadioStyle}" GroupName="SizeGroup" Content="Duże Płytki (10x10)" Checked="ModeSelection_Changed"/>
+                                                <RadioButton x:Name="RadSizeNormal" Style="{StaticResource ForestPillRadioStyle}" GroupName="SizeGroup" Content="Klasyczna (16x16)" IsChecked="True" Checked="ModeSelection_Changed"/>
+                                                <RadioButton x:Name="RadSizeLarge" Style="{StaticResource ForestPillRadioStyle}" GroupName="SizeGroup" Content="Przestronna (22x22)" Checked="ModeSelection_Changed"/>
+                                            </WrapPanel>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Option: Speed -->
+                                    <Border Style="{StaticResource ForestCardBorderStyle}" Margin="0,0,0,12">
+                                        <StackPanel>
+                                            <TextBlock Text="⚡ Prędkość Węża:" FontWeight="Bold" FontSize="13" Margin="0,0,0,8" Foreground="{StaticResource TextGoldBrush}"/>
+                                            <WrapPanel>
+                                                <RadioButton x:Name="RadSpeedSloth" Style="{StaticResource ForestPillRadioStyle}" GroupName="SpeedGroup" Content="Leniwiec (Wolno)" Checked="ModeSelection_Changed"/>
+                                                <RadioButton x:Name="RadSpeedDeer" Style="{StaticResource ForestPillRadioStyle}" GroupName="SpeedGroup" Content="Jeleń (Normalnie)" IsChecked="True" Checked="ModeSelection_Changed"/>
+                                                <RadioButton x:Name="RadSpeedFalcon" Style="{StaticResource ForestPillRadioStyle}" GroupName="SpeedGroup" Content="Sokół (Szybko)" Checked="ModeSelection_Changed"/>
+                                                <RadioButton x:Name="RadSpeedViper" Style="{StaticResource ForestPillRadioStyle}" GroupName="SpeedGroup" Content="Żmija (Ekstremalnie)" Checked="ModeSelection_Changed"/>
+                                                <RadioButton x:Name="RadSpeedDynamic" Style="{StaticResource ForestPillRadioStyle}" GroupName="SpeedGroup" Content="Dynamiczna" Checked="ModeSelection_Changed"/>
+                                            </WrapPanel>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Option: Wall Mode -->
+                                    <Border Style="{StaticResource ForestCardBorderStyle}" Margin="0,0,0,12">
+                                        <StackPanel>
+                                            <TextBlock Text="🧱 Ściany Lasu (Wall Mode):" FontWeight="Bold" FontSize="13" Margin="0,0,0,8" Foreground="{StaticResource TextGoldBrush}"/>
+                                            <WrapPanel>
+                                                <RadioButton x:Name="RadWallSolid" Style="{StaticResource ForestPillRadioStyle}" GroupName="WallGroup" Content="Gęsty Las (Kolizja ze ścianą)" IsChecked="True" Checked="ModeSelection_Changed"/>
+                                                <RadioButton x:Name="RadWallPortal" Style="{StaticResource ForestPillRadioStyle}" GroupName="WallGroup" Content="Magiczny Portal (Przenikanie)" Checked="ModeSelection_Changed"/>
+                                            </WrapPanel>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Option: Special Modes -->
+                                    <Border Style="{StaticResource ForestCardBorderStyle}">
+                                        <StackPanel>
+                                            <TextBlock Text="✨ Tryb Dodatkowy:" FontWeight="Bold" FontSize="13" Margin="0,0,0,8" Foreground="{StaticResource TextGoldBrush}"/>
+                                            <WrapPanel>
+                                                <RadioButton x:Name="RadSpecialClassic" Style="{StaticResource ForestPillRadioStyle}" GroupName="SpecialGroup" Content="Klasyczny (1 jabłko)" IsChecked="True" Checked="ModeSelection_Changed"/>
+                                                <RadioButton x:Name="RadSpecialTwin" Style="{StaticResource ForestPillRadioStyle}" GroupName="SpecialGroup" Content="Dwa Jabłka" Checked="ModeSelection_Changed"/>
+                                                <RadioButton x:Name="RadSpecialGolden" Style="{StaticResource ForestPillRadioStyle}" GroupName="SpecialGroup" Content="Złoty Żołądź (Bonus)" Checked="ModeSelection_Changed"/>
+                                                <RadioButton x:Name="RadSpecialObstacles" Style="{StaticResource ForestPillRadioStyle}" GroupName="SpecialGroup" Content="Głazy i Pnie" Checked="ModeSelection_Changed"/>
+                                                <RadioButton x:Name="RadSpecialPeaceful" Style="{StaticResource ForestPillRadioStyle}" GroupName="SpecialGroup" Content="Spokojny Spacer" Checked="ModeSelection_Changed"/>
+                                            </WrapPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+
+                                <!-- Column 2: Skins, Preview & Records -->
+                                <StackPanel Grid.Column="1">
+                                    <!-- Skins Selection Card -->
+                                    <Border Style="{StaticResource ForestCardBorderStyle}" Margin="0,0,0,12">
+                                        <StackPanel>
+                                            <TextBlock Text="🎨 Wybór Skórki Węża (Skins):" FontWeight="Bold" FontSize="13" Margin="0,0,0,8" Foreground="{StaticResource TextGoldBrush}"/>
+
+                                            <!-- Live Slithering Skin Preview Canvas -->
+                                            <views:SkinPreviewCanvas x:Name="SkinPreview" Height="90" Margin="0,0,0,10"/>
+                                            <TextBlock x:Name="TxtSkinDescription" Text="Opis skórki" FontSize="11" FontStyle="Italic" Foreground="{StaticResource TextMutedBrush}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                                            <!-- Skin Selection WrapPanel -->
+                                            <WrapPanel x:Name="PanelSkinsList" />
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Stats Card -->
+                                    <Border Style="{StaticResource ForestCardBorderStyle}" Margin="0,0,0,12">
+                                        <StackPanel>
+                                            <TextBlock Text="📊 Twoje Leśne Osiągnięcia:" FontWeight="Bold" FontSize="13" Margin="0,0,0,8" Foreground="{StaticResource TextGoldBrush}"/>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+
+                                                <StackPanel Grid.Row="0" Grid.Column="0" Margin="4">
+                                                    <TextBlock Text="NAJWYŻSZY WYNIK" FontSize="9" Foreground="{StaticResource TextMutedBrush}"/>
+                                                    <TextBlock x:Name="TxtStatsHighScore" Text="0" FontWeight="Black" FontSize="18" Foreground="{StaticResource ForestGoldBrush}"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Row="0" Grid.Column="1" Margin="4">
+                                                    <TextBlock Text="ŁĄCZNIE OWOCÓW" FontSize="9" Foreground="{StaticResource TextMutedBrush}"/>
+                                                    <TextBlock x:Name="TxtStatsTotalApples" Text="0" FontWeight="Black" FontSize="18" Foreground="#FFFFFF"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Row="1" Grid.Column="0" Margin="4">
+                                                    <TextBlock Text="ROZEGRANE GRY" FontSize="9" Foreground="{StaticResource TextMutedBrush}"/>
+                                                    <TextBlock x:Name="TxtStatsGamesPlayed" Text="0" FontWeight="Black" FontSize="18" Foreground="#FFFFFF"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Row="1" Grid.Column="1" Margin="4">
+                                                    <TextBlock Text="ZWYCIĘSTWA" FontSize="9" Foreground="{StaticResource TextMutedBrush}"/>
+                                                    <TextBlock x:Name="TxtStatsVictories" Text="0" FontWeight="Black" FontSize="18" Foreground="{StaticResource ForestGreenLightBrush}"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Controls Legend Card -->
+                                    <Border Style="{StaticResource ForestCardBorderStyle}">
+                                        <StackPanel>
+                                            <TextBlock Text="🕹 Sterowanie:" FontWeight="Bold" FontSize="13" Margin="0,0,0,6" Foreground="{StaticResource TextGoldBrush}"/>
+                                            <TextBlock Text="• Strzałki / W, A, S, D — Zmiana kierunku węża" FontSize="11" Margin="0,2"/>
+                                            <TextBlock Text="• Spacja — Pauza / Wznowienie rozgrywki" FontSize="11" Margin="0,2"/>
+                                            <TextBlock Text="• R — Błyskawiczny restart gry" FontSize="11" Margin="0,2"/>
+                                            <TextBlock Text="• M — Wyciszenie efektów dźwiękowych" FontSize="11" Margin="0,2"/>
+                                            <TextBlock Text="• Esc — Powrót do menu głównego" FontSize="11" Margin="0,2"/>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </ScrollViewer>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
