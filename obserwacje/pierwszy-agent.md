@@ -30,7 +30,7 @@ Rules:
 - Co agent zrobił najpierw: Najpierw agent, zrobił plan działania i kazał mi go zatwierdzic.
 - O co pytał — i co zostało zatwierdzone bez czytania: Pytał czy może korzystac z komend dotnet oraz zapytał o przejrzenie planu działania. Zgodziłam się na obydwa.
 - Pierwszy błąd i co agent z nim zrobił: Nie zrobił folderu na wszystkie pliki związane ze snake. Oprócz tego gra nie jest płynna
-- Stan po 25 minutach: działa / częściowo / nie działa / nie wiem
+- Stan po 25 minutach: działa / częściowo / nie działa / nie wiem: Aplikacja działa
 - Skąd wiem, że aplikacja działa (co zostało sprawdzone): zostalo wykonane dotnet run -- --test i wszystko jest ok. 
 - Rzeczy, które agent zrobił, a których nie rozumiem: --
-- Jak mi się wydawało, że poszło (jedno zdanie): 
+- Jak mi się wydawało, że poszło (jedno zdanie): Myśle, że zadanie było dośc proste, jedyny problem mógłbyć z połączeniem githuba
